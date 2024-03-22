@@ -1,0 +1,16 @@
+<launch>
+
+ <rosparam param="rate">10</rosparam>
+ <rosparam param="ticks_meter">4310</rosparam>
+ <rosparam param="base_width">0.215</rosparam>
+ 
+  <node pkg="differential_drive" type="diff_tf.py" name="diff_tf" output="screen">
+  </node>
+       
+       
+       
+  <param name="robot_description" textfile="$(find my_robot)/urdf/my_robot.urdf" />
+  <node pkg="rviz" type="rviz" name="rviz" output="screen"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />        
+       
+</launch>

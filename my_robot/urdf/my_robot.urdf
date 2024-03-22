@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<robot name="aiebot">
+
+<material name="blue">
+    <color rgba="0 0 1 1"/>
+  </material>
+  <material name="black">
+    <color rgba="0 0 0 1"/>
+  </material>
+  <material name="white">
+    <color rgba="1 1 1 1"/>
+  </material>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.085" />
+      <geometry>
+        <box size ="0.22 0.2 0.15"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+
+
+  <link name="right_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material name="blue"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.032"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="base_to_right_wheel" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_wheel"/>
+    <origin rpy="-1.5708 0 0" xyz="0 -.1150 0.032"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+  </joint>
+
+  <link name="left_wheel">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <material name="blue"/>
+      <geometry>
+        <cylinder length="0.03" radius="0.032"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="base_to_left_wheel" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_wheel"/>
+    <origin rpy="1.5708 0 0" xyz="0 0.1150 0.032"/>
+    <axis rpy="0 0 0" xyz="0 1 0"/>
+  </joint>
+ 
+  <link name="laser">
+    <visual>
+      <geometry>
+        <cylinder length="0.04" radius="0.035"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>  
+  
+  <joint name="base_to_laser" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser"/>
+    <origin xyz="-0.08 0 0.2" rpy="0 0 0"/>
+  </joint>
+  
+</robot>
