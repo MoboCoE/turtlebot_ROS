@@ -11,10 +11,10 @@ Raspberry Pi4
 - run roscore
 - rosserial
 git clone from https://github.com/ros-drivers/rosserial
-rosrun rosserial_server serial_node _port:=/dev/ttyUSB0
+: rosrun rosserial_server serial_node _port:=/dev/ttyUSB0
 - rplidar
 git clone from https://github.com/Slamtec/rplidar_ros
-roslaunch rplidar_ros rplidar_a1.launch
+: roslaunch rplidar_ros rplidar_a1.launch
 - open camera
 rosrun my_cam image_publisher.py
 
