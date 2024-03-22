@@ -26,5 +26,7 @@ Host
 - run map: roslaunch mobile_robot_autonomous_navigation my_nav.launch
 - subscribe image: rosrun my_cam image_subscriber.py
 
+
+
 https://github.com/MoboCoE/turtlebot_ROS/assets/119753018/80c303c6-1b68-4c6d-877b-d0014f7eedf4
 
