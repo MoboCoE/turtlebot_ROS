@@ -21,6 +21,8 @@ rosrun my_cam image_publisher.py
 Host
 - Set ROS_MATER_URI bash according to the host's IP according to this link: https://answers.ros.org/question/272065/specification-of-ros_master_uri-and-ros_hostname/
 - run roscore
+- git clone differential-drive: https://github.com/jfstepha/differential-drive
+- git clone slam-gmapping: https://github.com/ros-perception/slam_gmapping
 - create map: roslaunch mobile_robot_autonomous_navigation myrobot_mapping.launch
 - save map: rosrun map_server map_saver -f name
 - run map: roslaunch mobile_robot_autonomous_navigation my_nav.launch
