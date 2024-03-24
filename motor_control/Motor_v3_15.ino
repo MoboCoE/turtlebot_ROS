@@ -41,7 +41,7 @@ void TimerHandler() {
 // ros
 ros::NodeHandle nh;
 ros::Subscriber<geometry_msgs::Twist>
-cmd_vel_sub("cmd_vel", &cmd_vel_callback);
+  cmd_vel_sub("cmd_vel", &cmd_vel_callback);
 geometry_msgs::Vector3Stamped speed_msg;  //create a "speed_msg" ROS message​
 
 std_msgs::Int16 lwheel_mgs;  // these 2 int16 variables are used to sent encoder counts to differential drive package​
@@ -70,7 +70,7 @@ float GearRatio_R = 20;
 float Pulse_R = 44;
 float Wheel_R = 65;
 float LoopFreq_R = 100;
-volatile float Vel_R = -200;
+volatile float Vel_R = -0.1;
 
 volatile long v3, v4;
 long V3H, V3L, CNT3;
@@ -80,7 +80,7 @@ long V4H, V4L, CNT4;
 float setpoint_L = 2;
 float error_L = 0;
 float Kp_L = 70;
-float Ki_L = 0.8;
+float Ki_L = 0.8;//0.8;
 float Kd_L = 0;
 
 float sum_L = 0;
@@ -94,7 +94,7 @@ float GearRatio_L = 20;
 float Pulse_L = 44;
 float Wheel_L = 65;
 float LoopFreq_L = 100;
-volatile float Vel_L = -200;
+volatile float Vel_L = 0.1;
 
 void timer3Int(void);
 void timer4Int(void);
@@ -178,12 +178,13 @@ void setup() {
 }
 
 void loop() {
-  nh.spinOnce(); 
+  nh.spinOnce();
+  delay(10);
   //Serial.print("R: ");
   //Serial.print(Vel_R);
   //Serial.print(" L: ");
-  //Serial.println(Vel_L);
-  //Serial.print("TIM3: ");
+  //Serial.print(Vel_L);
+  //Serial.print("  TIM3: ");
   //Serial.print(v3);
   //Serial.print("  CNT3: ");
   //Serial.print(CNT3);
@@ -215,17 +216,19 @@ void driveMotor() {
   v4 = timer4->getCount();
   v4 = v4 + (V4H << 16);
 
+  //pulse_per_loop_R = 1;
   speed_R = v3 - prevSpeed_R;
   prevSpeed_R = v3;
   error_R = pulse_per_loop_R - speed_R;
   sum_R += error_R;
 
+  //pulse_per_loop_L = 5;
   speed_L = v4 - prevSpeed_L;
   prevSpeed_L = v4;
   error_L = pulse_per_loop_L - speed_L;
   sum_L += error_L;
 
-  rwheel_mgs.data = timer3->getCount();;
+  rwheel_mgs.data = timer3->getCount();
   lwheel_mgs.data = timer4->getCount();
   lwheel_pub.publish(&lwheel_mgs);
   rwheel_pub.publish(&rwheel_mgs);
@@ -247,29 +250,38 @@ void driveMotor() {
   PWMvalue_R = (Kp_R * error_R) + (Ki_R * sum_R);
   PWMvalue_L = (Kp_L * error_L) + (Ki_L * sum_L);
 
-  if (PWMvalue_R >= 0) {
-    digitalWrite(IN1, HIGH);
-    digitalWrite(IN2, LOW);
-  } else {
+  if (PWMvalue_L >= 0) {
     digitalWrite(IN1, LOW);
     digitalWrite(IN2, HIGH);
-    PWMvalue_R = PWMvalue_R * -1;
+  } else {
+    digitalWrite(IN1, HIGH);
+    digitalWrite(IN2, LOW);
+    PWMvalue_L = PWMvalue_L * -1;
   }
 
-  if (PWMvalue_L >= 0) {
+  if (PWMvalue_R >= 0) {
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, HIGH);
   } else {
     digitalWrite(IN3, HIGH);
     digitalWrite(IN4, LOW);
-    PWMvalue_L = PWMvalue_L * -1;
+    PWMvalue_R = PWMvalue_R * -1;
   }
 
-  PWMvalue_R = map(PWMvalue_R, 0, 1000, 0, 255);
-  PWMvalue_L = map(PWMvalue_L, 0, 1000, 0, 255);
+  PWMvalue_R = map(PWMvalue_R, 0, 1000, 60, 255);
+  PWMvalue_L = map(PWMvalue_L, 0, 1000, 60, 255);
 
-  analogWrite(ENA, (int)PWMvalue_R);
-  analogWrite(ENB, (int)PWMvalue_L);
+  /*digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+
+  //analogWrite(ENA, 200);
+  //analogWrite(ENB, 50);*/
+
+  analogWrite(ENB, (int)PWMvalue_R);
+  analogWrite(ENA, (int)PWMvalue_L);
 
   //CNT3 = timer3->getCount() + (V3H << 16);
 
@@ -300,15 +312,13 @@ void timer4Int(void) {
 
 
 
-void cmd_vel_callback(const geometry_msgs::Twist& msg)
-{
+void cmd_vel_callback(const geometry_msgs::Twist &msg) {
 
   double speed_ang = msg.angular.z;
 
   double speed_lin = msg.linear.x;
 
-  Vel_R = 200 * (speed_lin + (speed_ang * 65/2.0));
+  Vel_R = 1000 * (speed_lin + (speed_ang * 0.215 / 2.0));
 
-  Vel_L = 200  * (speed_lin - (speed_ang * 65/2.0));
-
+  Vel_L = 1000 * (speed_lin - (speed_ang * 0.215 / 2.0));
 }
