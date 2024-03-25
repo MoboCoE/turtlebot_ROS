@@ -79,16 +79,13 @@ def callback_img(image_msg):
 
 
 if __name__=="__main__":
-    # global angle
     bridge = CvBridge()
     rospy.init_node("image_subscriber", anonymous=True)
     print("Subscribe images from topic /image_raw ...")
-    #print("Subscribe lidar from topic /scan")
-
+    #subscribe image and lidar
     image_subcriber = rospy.Subscriber("image_raw", Image, callback_img)
     lidar_subscriber = rospy.Subscriber("scan", LaserScan, callback_lidar)
-    #print(image_subcriber)
-    print(lidar_subscriber)
+
     try:
         # spin() simply keeps python from exiting until this node is stopped
         rospy.spin()
